@@ -3,7 +3,7 @@ import pickle
 from tqdm import tqdm
 
 from transformers import AutoTokenizer, CLIPTextModel, CLIPTokenizer
-from data import build_train_dataloader, parse_args
+from ..data import build_train_dataloader, parse_args
 
 def main(args):
     model = CLIPTextModel.from_pretrained("openai/clip-vit-base-patch32").to(args.device)

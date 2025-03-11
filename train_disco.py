@@ -45,8 +45,8 @@ from loss import VaeGaussCriterion, BoxL1Criterion
 #accelerate launch train_disco.py --use_ema --resolution=512 --batch_size=1 --gradient_accumulation_steps=4 --gradient_checkpointing --max_train_steps=50000 --learning_rate=1e-05  --lr_scheduler="linear" --checkpointing_steps 5000
 def parse_args():
     parser = argparse.ArgumentParser(description="Simple example of a training script.")
-    parser.add_argument("--pretrained_diffusion_model_path", type=str, default='/model/anonymity/StableDiffusion/stable-diffusion-v1-5', help="Path to pretrained model or model identifier from huggingface.co/models.",)
-    parser.add_argument('--data_dir', type=str, default='/data/anonymity/VisualGenome', help='path to training dataset')
+    parser.add_argument("--pretrained_diffusion_model_path", type=str, default='./StableDiffusion/', help="Path to pretrained model or model identifier from huggingface.co/models.",)
+    parser.add_argument('--data_dir', type=str, default='./VisualGenome/', help='path to training dataset')
     parser.add_argument('--output_dir', type=str, default="./results", help='path to save checkpoint')
     parser.add_argument("--logging_dir", type=str, default="logs", help="TensorBoard log directory.")
 

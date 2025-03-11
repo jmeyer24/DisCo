@@ -1,3 +1,6 @@
+from io import BytesIO
+import requests
+
 import os
 import h5py  
 import json 
@@ -28,7 +31,7 @@ class VisualGenomeDataset(Dataset):
 
         self.labels = {}
         self.image_paths = []
-        with h5py.File(os.path.join(args.data_dir, 'labels', f'{self.mode}.h5'), 'r') as f:
+        with h5py.File(os.path.join(args.data_dir, f'{self.mode}.h5'), 'r') as f:
             for k, v in f.items():
                 if k == 'image_paths':
                     self.image_paths = list(v)
@@ -48,14 +51,22 @@ class VisualGenomeDataset(Dataset):
     
     def __getitem__(self, index):
         image_path = self.image_paths[index].decode("utf-8")
+
+        VG_IMAGE_URL = "https://cs.stanford.edu/people/rak248"
+        response = requests.get(os.path.join(VG_IMAGE_URL, image_path))
+        image = Image.open(BytesIO(response.content)).convert("RGB")
+
         image_path = os.path.join(self.image_dir, image_path)
 
-        image = Image.open(image_path).convert("RGB")
         WW, HH = image.size
         image = self.image_transforms(image)
-        clip_embs =  pickle.load(open(image_path.replace('images', 'clip').replace('.jpg', '.pkl'), 'rb'))
-        clip_obj_embs = torch.from_numpy(clip_embs['objects'])
-        clip_rel_embs = torch.from_numpy(clip_embs['relations'])
+        try:
+            clip_embs =  pickle.load(open(image_path.replace('images', 'clip').replace('.jpg', '.pkl'), 'rb'))
+            clip_obj_embs = torch.from_numpy(clip_embs['objects'])
+            clip_rel_embs = torch.from_numpy(clip_embs['relations'])
+        except:
+            clip_obj_embs = torch.from_numpy(np.zeros((1,1)))
+            clip_rel_embs = torch.from_numpy(np.zeros((1,1)))
         
         # Figure out which objects appear in relationships and which don't
         obj_idxs_with_rels = set()
@@ -187,7 +198,7 @@ def collate_fn_graph_batch(batch):
 def parse_args():
     parser = argparse.ArgumentParser(description="Simple example of a dataloader.")
     parser.add_argument('--batch_size', type=int, default=2, help='batch size')
-    parser.add_argument('--data_dir', type=str, default='/data/wangyunnan/VisualGenome', help='path to training dataset')
+    parser.add_argument('--data_dir', type=str, default='./VisualGenome', help='path to training dataset')
     parser.add_argument('--output_dir', type=str, default='', help='path to save checkpoint')
     parser.add_argument('--resolution', type=int, default=512, help='resolution')
     parser.add_argument('--dataloader_num_workers', type=int, default=4, help='num_workers')
