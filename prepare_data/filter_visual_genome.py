@@ -27,7 +27,7 @@ special entry "__in_image__" to be used for dummy relationships making the graph
 fully-connected.
 """
 
-VG_DIR = '.VisualGenome'
+VG_DIR = './VisualGenome'
 
 parser = argparse.ArgumentParser()
 
