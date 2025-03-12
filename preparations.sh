@@ -7,8 +7,8 @@ python -m pip install nvidia-nccl-cu11
 cp ./.venv/lib/python3.12/site-packages/triton/backends/nvidia/lib/cupti/libcupti.so.12 ./.venv/lib/python3.12/site-packages/nvidia/nccl/lib/
 
 ## Get the Visual Genome dataset
-mkdir VisualGenome/clip/VG_100K
-mkdir VisualGenome/clip/VG_100K_2
+mkdir -p VisualGenome/clip/VG_100K
+mkdir -p VisualGenome/clip/VG_100K_2
 cd VisualGenome
 wget https://homes.cs.washington.edu/~ranjay/visualgenome/data/dataset/attributes.json.zip
 wget https://homes.cs.washington.edu/~ranjay/visualgenome/data/dataset/image_data.json.zip
